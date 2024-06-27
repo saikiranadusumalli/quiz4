@@ -1,12 +1,13 @@
 body {
   font-family: Arial, sans-serif;
-  padding: 20px;
+  margin: 20px;
+  padding: 10px;
 }
 
-form {
-  margin-top: 20px;
+input[type="text"], button {
+  margin: 5px;
 }
 
-input[type=text], input[type=submit] {
-  margin: 10px 0;
+div {
+  margin-bottom: 20px;
 }

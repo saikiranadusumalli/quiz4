@@ -1,29 +1,47 @@
-from flask import Flask, request
+from flask import Flask, request, render_template, jsonify
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    with open('index.html', 'r') as file:
-        return file.read()
+    return render_template('index.html')
 
 @app.route('/process_text', methods=['POST'])
 def process_text():
-    text_s = request.form['string_s']
-    char_c = request.form['char_c']
+    S = request.form['string_s']
+    T = request.form['text_t']
+    C = request.form['char_c']
+    count_chars = {char: T.count(char) for char in S}
+    total_chars = len(T)
+    freq_chars = {char: count_chars.get(char, 0) / total_chars for char in S}
+    replaced_text = ''.join([C if char in S else char for char in T])
+    return jsonify(counts=count_chars, frequencies=freq_chars, replaced=replaced_text)
 
-    # Count each character in S
-    count_chars = {char: text_s.count(char) for char in set(text_s)}
+@app.route('/count_words', methods=['POST'])
+def count_words():
+    S = request.form['string_s']
+    T = request.form['text_t']
+    words = T.split()
+    word_count = len(words)
+    starts_with = {char: [word for word in words if word.startswith(char)] for char in S}
+    return jsonify(word_count=word_count, starts_with=starts_with)
 
-    # Calculate frequency of each character in S
-    total_chars = len(text_s)
-    freq_chars = {char: count / total_chars for char, count in count_chars.items()}
-
-    # Replace all characters in S with C
-    replaced_text = ''.join([char_c if char in text_s else char for char in text_s])
-
-    result = f"Counts: {count_chars}, Frequencies: {freq_chars}, Replaced Text: {replaced_text}"
-    return result
+@app.route('/process_stopwords', methods=['POST'])
+def process_stopwords():
+    S = request.form['string_s']
+    T = request.form['text_t']
+    P = request.form.getlist('stopwords[]')
+    words = T.split()
+    filtered_words = [word for word in words if word.lower() not in P]
+    removal_count = len(words) - len(filtered_words)
+    updated_text = ' '.join(filtered_words)
+    bigrams = {}
+    for i, word in enumerate(filtered_words):
+        if word[0] in S:
+            before = ' '.join(filtered_words[max(i-1, 0):i+1])
+            after = ' '.join(filtered_words[i:i+2])
+            bigrams[word] = [before, after]
+    return jsonify(removal_count=removal_count, updated_text=updated_text, bigrams=bigrams)
 
 if __name__ == '__main__':
     app.run(debug=True)

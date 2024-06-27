@@ -3,15 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Application</title>
+    <title>Text Processing Application</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <form action="/process_text" method="post">
-        Enter the string S: <input type="text" name="string_s"><br>
-        Enter the replacement character C: <input type="text" name="char_c" maxlength="1"><br>
-        <input type="submit" value="Submit">
-    </form>
+    <h1>Text Processing Application</h1>
+    <div>
+        <h2>Problem 10: Text Processing</h2>
+        String S: <input type="text" id="string_s"><br>
+        Text T: <input type="text" id="text_t"><br>
+        Replacement Character C: <input type="text" id="char_c"><br>
+        <button onclick="processText()">Process Text</button>
+        <p id="output10"></p>
+    </div>
+    <div>
+        <h2>Problem 11: Word Count</h2>
+        <button onclick="countWords()">Count Words</button>
+        <p id="output11"></p>
+    </div>
+    <div>
+        <h2>Problem 12: Stop Words Processing</h2>
+        Stopwords (comma-separated): <input type="text" id="stopwords"><br>
+        <button onclick="processStopwords()">Process Stopwords</button>
+        <p id="output12"></p>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
